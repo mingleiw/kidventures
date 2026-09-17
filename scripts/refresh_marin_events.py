@@ -91,13 +91,21 @@ def to_24h(disp):
 
 def infer_ages(title):
     t = title.lower()
-    if re.search(r"crawl|bab(y|ies)|newborn", t):
+    if re.search(r"crawl|bab(y|ies)|newborn|stroller", t):
         return "Babies & toddlers"
+    if re.search(r"\btots?\b|littles|wiggle", t):
+        return "Under 6"
     if re.search(r"26 ?mo|toddler", t):
         return "Under 3"
+    if re.search(r"story ?time|music time", t):
+        return "Under 6"
     if re.search(r"0[–-]5|preschool", t):
         return "Under 6"
     if re.search(r"\b(4|5)[–-]\d{1,2}\b", t):
+        return "Ages 4+"
+    if re.search(r"board game|parkour", t):
+        return "Ages 5+"
+    if re.search(r"mosaic|craft", t):
         return "Ages 4+"
     return "All ages"
 
