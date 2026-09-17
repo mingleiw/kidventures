@@ -55,10 +55,11 @@ def strip_tags(s):
 
 
 def parse_result(r):
+    # The feed is already filtered to the library's own "Storytime" category,
+    # so the category is the filter — titles vary ("Cuentos con Ritmo",
+    # "Sing & Stomp") and a keyword check would drop real storytimes.
     title = (r.get("title") or "").strip()
     if not title or "cancel" in title.lower():
-        return None
-    if "storytime" not in title.lower():
         return None
     if r.get("all_day"):
         return None
@@ -81,6 +82,9 @@ def parse_result(r):
     desc = strip_tags(r.get("shortdesc") or r.get("description"))
     if desc and desc.lower() not in blurb.lower():
         blurb = desc
+    if "cuento" in low or "bilingual" in blurb.lower() or "espa\u00f1ol" in blurb.lower():
+        if "bilingual" not in blurb.lower():
+            blurb += " Bilingual Spanish/English."
     location = (r.get("location") or "").strip()
     if location and location.lower() not in blurb.lower():
         blurb += " Meets in the %s." % location
