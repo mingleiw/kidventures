@@ -26,3 +26,27 @@ fi
 git fetch -q origin main
 git reset -q --hard origin/main
 echo "pushed and synced"
+
+# --- Sacramento branch (kidventures.fun) ---
+# The Sacramento branch builds a Sacramento-only site from the same data.
+# main is the single source of truth for scraped data; sync the scraper-owned
+# files, but NOT data/events.json or data/towns.json (the branch carries its own
+# Sacramento additions there) and NOT build.py (the branch has FOCUS_REGION and
+# the kidventures.fun BASE_URL).
+git checkout -q Sacramento
+git checkout -q main -- data/dated_events_sac.json \
+                       data/dated_events_marin.json \
+                       data/dated_events_curated.json
+python3 build.py
+
+if [ -z "$(git status --porcelain)" ]; then
+  echo "sacramento: no changes"
+else
+  ~/workspace/skills/github/bin/gh-push-tree "$(pwd)" "Daily Sacramento refresh ($(date +%F))" Sacramento
+  git fetch -q origin Sacramento
+  git reset -q --hard origin/Sacramento
+  echo "sacramento: pushed and synced"
+fi
+
+# Leave the workspace on main, the normal working branch.
+git checkout -q main
