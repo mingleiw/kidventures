@@ -174,7 +174,20 @@
   for (var i = 0; i < 7; i++) {
     var d = new Date(today); d.setDate(today.getDate() + i); week.push(d);
   }
+  function countFor(d) {
+    var n = 0;
+    for (var k = 0; k < EVENTS.length; k++) if (EVENTS[k].day === d.getDay()) n++;
+    return n;
+  }
+
+  // Open on the first day in the window that has something on, not blindly on
+  // today. This calendar is sparse by design — most days are empty — and
+  // defaulting to today showed an empty panel with no hint that Saturday was
+  // busy, which reads as broken rather than quiet.
   var picked = 0;
+  for (var w = 0; w < week.length; w++) {
+    if (countFor(week[w])) { picked = w; break; }
+  }
 
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
@@ -196,7 +209,12 @@
       b.setAttribute('role', 'tab');
       b.setAttribute('aria-selected', i === picked ? 'true' : 'false');
       var label = i === 0 ? 'Today' : (i === 1 ? 'Tomorrow' : SHORT[d.getDay()]);
-      b.innerHTML = '<span class="day-name">' + label + '</span><span class="day-num">' + d.getDate() + '</span>';
+      var n = countFor(d);
+      b.innerHTML = '<span class="day-name">' + label + '</span>' +
+                    '<span class="day-num">' + d.getDate() + '</span>' +
+                    (n ? '<span class="day-dot" aria-hidden="true"></span>' : '');
+      b.setAttribute('aria-label', label + ' ' + d.getDate() + ', ' +
+                     (n ? n + (n === 1 ? ' event' : ' events') : 'nothing listed'));
       b.addEventListener('click', function () { picked = i; strip(); render(); });
       stripEl.appendChild(b);
     });
@@ -232,7 +250,15 @@
 
     var when = picked === 0 ? 'today' : (picked === 1 ? 'tomorrow' : 'on ' + DAYS[d.getDay()]);
     weekMt.hidden = list.length !== 0;
-    weekMt.textContent = 'Nothing listed ' + when + '.';
+
+    // Say where to look next rather than just reporting nothing here.
+    var nxt = -1;
+    for (var j = 1; j < week.length; j++) {
+      var idx = (picked + j) % week.length;
+      if (countFor(week[idx])) { nxt = idx; break; }
+    }
+    weekMt.textContent = 'Nothing listed ' + when + '.' +
+      (nxt > -1 ? ' Next up: ' + (nxt === 0 ? 'today' : nxt === 1 ? 'tomorrow' : DAYS[week[nxt].getDay()]) + '.' : '');
   }
 
   strip();
