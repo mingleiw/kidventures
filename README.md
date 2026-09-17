@@ -134,6 +134,21 @@ Add to `data/events.json`. Events show on city pages whose region matches.
 **`source` is not optional.** Every listing renders a "Where this came from"
 link, so a parent can verify it in one tap. No source, no listing.
 
+### What does not fit this model
+
+**Sacramento Public Library storytimes.** They are scheduled per date and rotate
+between branches through the month, so there is no stable "Saturdays at Franklin"
+rule to encode. Listing one would be wrong most weeks. They are deliberately
+absent — do not add them from a single dated listing that happens to show up in
+search.
+
+**Registered classes** (Cosumnes CSD Toddler Time, Buddy Bunch). You enrol in
+those; they are not drop-in, so they do not belong on a "what's on today" page.
+
+**The Elk Grove library** has a grand opening on **10 October 2026** at its new
+address, 9260 Elk Grove Blvd. Nothing is listed there until it is open and a
+schedule is published.
+
 ### Why recurring events, not a dated calendar
 
 A static site has no editor to retire stale entries. A one-off date is wrong

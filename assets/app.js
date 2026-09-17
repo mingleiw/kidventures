@@ -204,13 +204,19 @@
 
   function render() {
     var d = week[picked];
+    // An entry may have no time: the day and venue are confirmed but the hour
+    // is not. Those sort last and say so rather than showing a made-up clock.
     var list = EVENTS.filter(function (e) { return e.day === d.getDay(); })
-                     .sort(function (a, b) { return a.time < b.time ? -1 : 1; });
+                     .sort(function (a, b) {
+                       var ta = a.time || '99:99', tb = b.time || '99:99';
+                       return ta < tb ? -1 : (ta > tb ? 1 : 0);
+                     });
 
     evEl.innerHTML = list.map(function (e) {
-      var when = hhmm(e.time) + (e.until ? ' – ' + hhmm(e.until) : '');
+      var when = e.time ? hhmm(e.time) + (e.until ? ' – ' + hhmm(e.until) : '') : '';
       return '<article class="event">' +
-        '<div class="ev-time">' + esc(when) + '</div>' +
+        '<div class="ev-time' + (when ? '' : ' ev-time-unknown') + '">' +
+          (when ? esc(when) : 'Time not confirmed') + '</div>' +
         '<div class="ev-body">' +
           '<h3>' + esc(e.title) + '</h3>' +
           '<p class="ev-where">' + esc(e.venue) + ', ' + esc(e.city) + '</p>' +

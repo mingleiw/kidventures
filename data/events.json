@@ -22,5 +22,15 @@
   "blurb": "Sunday morning market in Old Town, running year-round.",
   "source": "https://www.facebook.com/OldTownElkGroveFarmersMarket/",
   "day": 0
+ },
+ {
+  "day": 6,
+  "title": "Saturday Storytime at A Seat at the Table Books",
+  "venue": "A Seat at the Table Books",
+  "city": "Elk Grove",
+  "region": "sac",
+  "ages": "Under 8",
+  "blurb": "Stories and a craft at Elk Grove's family-run bookshop and cafe. There is a play area and a quiet room if it gets much.",
+  "source": "https://www.exploreelkgrove.com/events/storytime-at-a-seat-at-the-table-books/"
  }
 ]
