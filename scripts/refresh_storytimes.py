@@ -4,18 +4,22 @@
 The library schedules storytimes per date and rotates them between branches,
 so they cannot be encoded as weekly recurrences. Instead this script scrapes
 the library's public event listing once a day and writes *dated* instances to
-data/dated_events.json. build.py folds the next 7 days of those into each
+data/dated_events_sac.json. build.py folds the next 7 days of those into each
 Sacramento-area town page.
 
     python3 scripts/refresh_storytimes.py
 
-Stdlib only. Reads nothing but the public listing; writes data/dated_events.json.
+Stdlib only. Reads nothing but the public listing; writes
+data/dated_events_sac.json. Exits non-zero, leaving the file untouched,
+when the listing fails or yields zero storytimes — the cron reports that
+instead of publishing an empty calendar.
 """
 
 import datetime as dt
 import json
 import os
 import re
+import sys
 import urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -154,7 +158,11 @@ def main():
     cutoff = (today + dt.timedelta(days=DAYS_AHEAD)).isoformat()
     html = fetch(LISTING_URL)
     events = [e for e in parse_listing(html, today) if e["date"] <= cutoff]
-    out = os.path.join(ROOT, "data", "dated_events.json")
+    out = os.path.join(ROOT, "data", "dated_events_sac.json")
+    if not events:
+        print("ERROR: zero storytimes parsed — leaving %s untouched" % out,
+              file=sys.stderr)
+        sys.exit(1)
     with open(out, "w", encoding="utf-8") as f:
         json.dump(events, f, ensure_ascii=False, indent=1)
         f.write("\n")

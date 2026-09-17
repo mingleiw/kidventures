@@ -54,7 +54,7 @@
   <section class="hero">
     <div class="wrap hero-inner">
       <h1 class="hero-title"><span class="hl">Where to take the kids in San Rafael</span></h1>
-      <p class="lede">17 places within 40 miles, closest first. </p>
+      <p class="lede">17 places within 40 miles, closest first. Weekly markets and events too.</p>
       <p class="city-switch"><a href="../">Not your city? Pick another &rarr;</a></p>
     </div>
   </section>
@@ -69,6 +69,22 @@
       </div>
       <div class="picks" id="picks"></div>
       <p class="picks-note" id="picksNote"></p>
+    </div>
+  </section>
+
+  <section class="week" id="week">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>This week in the Marin &amp; North Bay</h2>
+        <p class="section-sub">Regular weekly events &mdash; markets, storytimes, open gyms</p>
+      </div>
+      <div class="daystrip" id="daystrip" role="tablist" aria-label="Pick a day"></div>
+      <div class="events" id="events"></div>
+      <p class="empty" id="weekEmpty" hidden></p>
+      <p class="week-foot">
+        Times are what organisers publish for the regular weekly slot.
+        Schedules change and sessions get cancelled &mdash; confirm with the venue before you set out.
+      </p>
     </div>
   </section>
 
@@ -314,7 +330,7 @@
 </main>
 <script>
 var TOWN = {"name": "San Rafael", "lat": 37.9735, "lon": -122.5311};
-var EVENTS = [];
+var EVENTS = [{"date": "2026-09-16", "time": "10:15", "title": "Toddler Storytime", "venue": "Mill Valley Public Library", "city": "Mill Valley", "region": "marin", "ages": "Toddlers", "blurb": "Join Librarian Miranda for books, songs, and stories in the library's outdoor amphitheater. Designed for babies, toddlers, and preschoolers with their caregivers.", "source": "https://millvalleylibrary.libcal.com/event/16531268", "until": "10:45"}, {"date": "2026-09-18", "time": "10:15", "title": "Pop-up Storytime in the Parks: Boyle", "venue": "Mill Valley Public Library", "city": "Mill Valley", "region": "marin", "ages": "All ages", "blurb": "Join us every Friday at Boyle and Hauke Park for Pop-up storytimes in the park! Meets in the Boyle Park.", "source": "https://millvalleylibrary.libcal.com/event/16724254", "until": "10:45"}, {"date": "2026-09-19", "time": "14:30", "title": "Family Storytime", "venue": "Mill Valley Public Library", "city": "Mill Valley", "region": "marin", "ages": "All ages", "blurb": "Children's early learning happens when they read, write, talk, sing and play. At Family Storytime on Saturdays, you'll hear favorite books, rhymes and flannel stories in our beautiful Children's Room....", "source": "https://millvalleylibrary.libcal.com/event/15583123", "until": "15:00"}];
 </script>
 <script src="../assets/app.js?v=649e2a712a"></script>
 

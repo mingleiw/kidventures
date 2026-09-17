@@ -175,12 +175,23 @@ as dated instances:
 
 - `scripts/refresh_storytimes.py` fetches the library's public event listing
   and writes real instances — each with its own per-event source URL — to
-  `data/dated_events.json`. Cancelled and rescheduled instances are dropped.
+  `data/dated_events_sac.json`. Cancelled and rescheduled instances are dropped.
   Stdlib only; reads the public listing, nothing else.
-- `build.py` folds the next 7 days of dated events into each Sacramento-area
-  town page alongside the weekly events. `assets/app.js` matches them by date
-  (`e.date`) while weekly events keep matching by day-of-week (`e.day`).
-- A daily cron runs the scraper, rebuilds, commits and pushes.
+
+**Mill Valley Public Library storytimes** are published as dated instances
+through the library's public LibCal calendar:
+
+- `scripts/refresh_marin_storytimes.py` queries that JSON feed day-by-day and
+  writes the storytime instances to `data/dated_events_marin.json`. Each source
+  owns its own file so a broken scraper can never wipe another source's data.
+
+- `build.py` folds the next 7 days of dated events into each town page of the
+  matching region (Sacramento-area, Marin-area) alongside the weekly events.
+  `assets/app.js` matches them by date (`e.date`) while weekly events keep
+  matching by day-of-week (`e.day`).
+- A daily cron runs both scrapers, rebuilds, commits and pushes. Either script
+  exits non-zero without touching its file when its source yields zero
+  storytimes, so the cron reports it instead of publishing an empty calendar.
 
 If the scrape ever fails or the listing markup changes, the site falls back to
 the weekly events — it never invents storytimes to fill the gap. Do not add

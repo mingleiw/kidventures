@@ -6,6 +6,7 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 python3 scripts/refresh_storytimes.py
+python3 scripts/refresh_marin_storytimes.py
 python3 build.py
 
 if [ -z "$(git status --porcelain)" ]; then

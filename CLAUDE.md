@@ -36,12 +36,17 @@ invented listings were shipped once already, and a fabricated storytime sends a
 family on a real drive.
 
 **Dated events come from the daily refresh, never from memory.** Sacramento
-Public Library storytimes live in `data/dated_events.json`, written by
+Public Library storytimes live in `data/dated_events_sac.json`, written by
 `scripts/refresh_storytimes.py` (scrapes the library's public listing; stdlib
-only). Do not hand-add dated instances — the scraper owns that file. Do not
-encode library storytimes as weekly recurrences in `data/events.json` either:
-they rotate branches per date. `build.py` folds the next 7 days of dated
-events into the page JSON; `assets/app.js` matches them by `e.date`.
+only). Mill Valley Public Library storytimes live in
+`data/dated_events_marin.json`, written by
+`scripts/refresh_marin_storytimes.py` (reads the library's public LibCal
+JSON feed; stdlib only). One file per source, so a broken scraper can never
+wipe another source's data. Do not hand-add dated instances — the scrapers
+own those files. Do not encode library storytimes as weekly recurrences in
+`data/events.json` either: they are published per date. `build.py` folds the
+next 7 days of dated events into the page JSON; `assets/app.js` matches them
+by `e.date`.
 
 **No opening hours, prices or one-off dates.** They change constantly and there
 is no editor here to retire a stale value. Cards carry only slow-changing facts

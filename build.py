@@ -378,10 +378,15 @@ def main():
     towns = load('towns.json')
     places = load('places.json')
     events = load('events.json')
-    try:
-        dated = load('dated_events.json')
-    except FileNotFoundError:
-        dated = []  # first run before any refresh; weekly events still render
+    # Dated events come from per-source refresh scripts, one file per source
+    # so a broken scraper can never wipe another source's data. Each entry
+    # carries its own region; city_page filters on it.
+    dated = []
+    for f in ('dated_events_sac.json', 'dated_events_marin.json'):
+        try:
+            dated += load(f)
+        except FileNotFoundError:
+            pass  # first run before any refresh; weekly events still render
     base = BASE_URL
 
     keep, skipped = [], []
