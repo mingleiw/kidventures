@@ -47,7 +47,10 @@ own those files. Do not encode library storytimes as weekly recurrences in
 `data/events.json` either: they are published per date. Recurring
 (non-library) weekly events from the Marin Mommies calendar were imported
 once via `scripts/import_marin_mommies.py` (2026-09-16, 40 events); re-run
-manually when they go stale. `build.py` folds the
+manually when they go stale. One-off dated events (Maker Faire, Goblin
+Jamboree, museum free days) live in `data/dated_events_curated.json`,
+hand-maintained, loaded by `build.py` alongside the scraper files.
+`build.py` folds the
 next 7 days of dated events into the page JSON; `assets/app.js` matches them
 by `e.date`.
 

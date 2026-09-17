@@ -381,8 +381,10 @@ def main():
     # Dated events come from per-source refresh scripts, one file per source
     # so a broken scraper can never wipe another source's data. Each entry
     # carries its own region; city_page filters on it.
+    # dated_events_curated.json holds hand-added one-offs (not scraper-owned).
     dated = []
-    for f in ('dated_events_sac.json', 'dated_events_marin.json'):
+    for f in ('dated_events_sac.json', 'dated_events_marin.json',
+              'dated_events_curated.json'):
         try:
             dated += load(f)
         except FileNotFoundError:
