@@ -27,11 +27,19 @@ EVENTS_JSON = os.path.join(ROOT, "data", "events.json")
 ORIGIN = "marin-mommies"
 
 
-def fetch(url):
-    out = subprocess.run(
-        ["curl", "-sL", "--max-time", "30", "-A", UA, url],
-        capture_output=True, text=True,
-    ).stdout
+def fetch(url, retries=3):
+    # Marin Mommies intermittently refuses connections (http=000) when hit
+    # with 21 rapid day-page fetches. Retry with backoff; callers treat a
+    # still-empty result as a failed day (see the quorum guard in main).
+    out = ""
+    for attempt in range(retries):
+        out = subprocess.run(
+            ["curl", "-sL", "--max-time", "30", "-A", UA, url],
+            capture_output=True, text=True,
+        ).stdout
+        if out.strip():
+            break
+        time.sleep(2 * (attempt + 1))
     time.sleep(0.4)
     return out
 
@@ -115,11 +123,25 @@ def main():
     days = [start + timedelta(days=i) for i in range(21)]
 
     by_slug = defaultdict(list)
+    failed_days = []
     for d in days:
         html = fetch(f"{BASE}/calendar/{d.isoformat()}")
+        if not html.strip():
+            failed_days.append(d.isoformat())
+            continue
         for ev in parse_day(html):
             if ev["date"]:
                 by_slug[ev["slug"]].append(ev)
+
+    # Quorum guard: weekday recurrence is inferred from per-day occurrence
+    # counts, so a partial scrape invents drops and reschedules. Refuse to
+    # rewrite data on a thin scrape (2026-09-17: 12/21 days failed and the
+    # run reported 12 dropped + 4 rescheduled events that were all still
+    # listed on the site).
+    if len(failed_days) > 3:
+        print(f"ERROR: {len(failed_days)}/21 calendar day fetches failed "
+              f"({', '.join(failed_days)}); keeping prior data", file=sys.stderr)
+        return 1
 
     # Detect weekly recurrences (same logic as the original import).
     recurring = []
