@@ -13,10 +13,23 @@ that city. Doing it here rather than in the browser means each page ships
 genuinely different, crawlable content and still works with JavaScript off.
 """
 
-import json, math, os, re, shutil, html, datetime
+import json, math, os, re, shutil, html, datetime, hashlib
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_NAME = 'Kidventures'
+
+
+def _asset_v(rel):
+    with open(os.path.join(ROOT, rel), 'rb') as f:
+        return hashlib.sha1(f.read()).hexdigest()[:10]
+
+
+# Cache-buster for CSS/JS: the hash changes only when the file's contents do,
+# so daily data-only rebuilds keep using the cached assets while a code change
+# always fetches fresh. Without this, browsers sit on the old app.js after a
+# deploy and dated events silently stop rendering.
+APP_JS_V = _asset_v('assets/app.js')
+STYLE_V = _asset_v('assets/style.css')
 
 # Change this if the repo is renamed or a custom domain is pointed at the site:
 # it drives every canonical URL and the sitemap, and a wrong value silently tells
@@ -87,7 +100,7 @@ HEAD = '''<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="{up}assets/style.css" />
+<link rel="stylesheet" href="{up}assets/style.css?v=__STYLE_V__" />
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
@@ -110,6 +123,10 @@ HEAD = '''<!DOCTYPE html>
   </div>
 </header>
 '''
+
+# Bake the CSS content hash into the template once: every page served after a
+# style.css change points at a new URL, so no browser keeps the old stylesheet.
+HEAD = HEAD.replace('__STYLE_V__', STYLE_V)
 
 FOOT = '''
 <footer class="site-footer">
@@ -267,7 +284,7 @@ def city_page(town, places, events, dated, base):
     out += '<script>\nvar TOWN = %s;\nvar EVENTS = %s;\n</script>\n' % (
         json.dumps({'name': name, 'lat': town['lat'], 'lon': town['lon']}),
         json.dumps(ev, ensure_ascii=False))
-    out += '<script src="../assets/app.js"></script>\n'
+    out += '<script src="../assets/app.js?v=' + APP_JS_V + '"></script>\n'
     out += FOOT
     return slug, out
 
