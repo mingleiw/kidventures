@@ -234,7 +234,7 @@
       var when = e.time ? hhmm(e.time) + (e.until ? ' – ' + hhmm(e.until) : '') : '';
       return '<article class="event">' +
         '<div class="ev-time' + (when ? '' : ' ev-time-unknown') + '">' +
-          (when ? esc(when) : 'Time not confirmed') + '</div>' +
+          (when ? esc(when) : esc(e.timeLabel || 'Time not confirmed')) + '</div>' +
         '<div class="ev-body">' +
           '<h3>' + esc(e.title) + '</h3>' +
           '<p class="ev-where">' + esc(e.venue) + ', ' + esc(e.city) + '</p>' +

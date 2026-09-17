@@ -123,6 +123,8 @@ Add to `data/events.json`. Events show on city pages whose region matches.
   "day": 6,                     // 0=Sun … 6=Sat
   "time": "08:00",              // OPTIONAL. 24h. Omit if the hour is genuinely
                                 // unknown — never guess it; see below
+  "timeLabel": "Mornings",      // OPTIONAL. Shown instead of a clock when `time`
+                                // is absent but the period IS sourced
   "until": "12:00",             // optional
   "title": "Elk Grove Certified Farmers' Market",
   "venue": "Laguna Gateway Center", "city": "Elk Grove",
@@ -140,6 +142,9 @@ venue is worth listing even when the hour isn't known; a guessed clock time is
 not, because a family drives to it. Omit `time` and the row renders "Time not
 confirmed", sorts after the timed events, and shows its source link so the hour
 can be checked. Do not fill it in with a plausible-looking value.
+
+If the source says something real but vague — "each Saturday morning" — put that
+in `timeLabel` and leave `time` out. It carries what is known and no more.
 
 ### What does not fit this model
 
