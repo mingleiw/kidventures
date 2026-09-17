@@ -35,6 +35,14 @@ link so a parent can verify it. No source, no listing. This exists because
 invented listings were shipped once already, and a fabricated storytime sends a
 family on a real drive.
 
+**Dated events come from the daily refresh, never from memory.** Sacramento
+Public Library storytimes live in `data/dated_events.json`, written by
+`scripts/refresh_storytimes.py` (scrapes the library's public listing; stdlib
+only). Do not hand-add dated instances — the scraper owns that file. Do not
+encode library storytimes as weekly recurrences in `data/events.json` either:
+they rotate branches per date. `build.py` folds the next 7 days of dated
+events into the page JSON; `assets/app.js` matches them by `e.date`.
+
 **No opening hours, prices or one-off dates.** They change constantly and there
 is no editor here to retire a stale value. Cards carry only slow-changing facts
 plus a map link, which is always current. Map links are Google Maps *search*

@@ -13,7 +13,7 @@ that city. Doing it here rather than in the browser means each page ships
 genuinely different, crawlable content and still works with JavaScript off.
 """
 
-import json, math, os, re, shutil, html
+import json, math, os, re, shutil, html, datetime
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 SITE_NAME = 'Kidventures'
@@ -176,7 +176,7 @@ FILTERS = '''
 '''
 
 
-def city_page(town, places, events, base):
+def city_page(town, places, events, dated, base):
     slug = slugify(town['name'])
     name = town['name']
     ranked = sorted(((miles(town['lat'], town['lon'], p['lat'], p['lon']), p) for p in places),
@@ -184,6 +184,12 @@ def city_page(town, places, events, base):
     listed = [(d, p) for d, p in ranked if d <= LIST_MILES]
     near = [p for d, p in ranked if d <= MAX_MILES]
     ev = [e for e in events if e['region'] == town['region']]
+    # Dated events (e.g. library storytimes refreshed daily) join the weekly
+    # ones for the 7 days the strip actually shows. Anything further out is
+    # refreshed into view by tomorrow's build.
+    today = datetime.date.today()
+    week = {str(today + datetime.timedelta(days=i)) for i in range(7)}
+    ev += [e for e in dated if e['region'] == town['region'] and e['date'] in week]
 
     title = 'Where to take the kids in %s · %s' % (name, SITE_NAME)
     desc = ('Places to take kids near %s, sorted by how far they are. '
@@ -355,6 +361,10 @@ def main():
     towns = load('towns.json')
     places = load('places.json')
     events = load('events.json')
+    try:
+        dated = load('dated_events.json')
+    except FileNotFoundError:
+        dated = []  # first run before any refresh; weekly events still render
     base = BASE_URL
 
     keep, skipped = [], []
@@ -372,7 +382,7 @@ def main():
             shutil.rmtree(p)
 
     for t in towns_with_pages:
-        slug, page = city_page(t, places, events, base)
+        slug, page = city_page(t, places, events, dated, base)
         d = os.path.join(ROOT, slug)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, 'index.html'), 'w', encoding='utf-8').write(page)

@@ -148,11 +148,10 @@ in `timeLabel` and leave `time` out. It carries what is known and no more.
 
 ### What does not fit this model
 
-**Sacramento Public Library storytimes.** They are scheduled per date and rotate
-between branches through the month, so there is no stable "Saturdays at Franklin"
-rule to encode. Listing one would be wrong most weeks. They are deliberately
-absent — do not add them from a single dated listing that happens to show up in
-search.
+**Sacramento Public Library storytimes** are the dated exception to the rule
+above — they are covered in the next section, not here. Do not encode them as
+weekly recurrences: they are scheduled per date and rotate between branches,
+so a "Saturdays at Franklin" rule would be wrong most weeks.
 
 **Registered classes** (Cosumnes CSD Toddler Time, Buddy Bunch). You enrol in
 those; they are not drop-in, so they do not belong on a "what's on today" page.
@@ -167,6 +166,25 @@ A static site has no editor to retire stale entries. A one-off date is wrong
 forever once it passes. A weekday rule — *"Saturdays at 8"* — stays true for
 months, and the browser works out which dates it lands on. It's the version of an
 events calendar that a static site can keep honest.
+
+### The dated exception: library storytimes, refreshed daily
+
+**Sacramento Public Library storytimes** rotate between branches on a per-date
+schedule, so they cannot be encoded as weekday rules. Instead they are scraped
+as dated instances:
+
+- `scripts/refresh_storytimes.py` fetches the library's public event listing
+  and writes real instances — each with its own per-event source URL — to
+  `data/dated_events.json`. Cancelled and rescheduled instances are dropped.
+  Stdlib only; reads the public listing, nothing else.
+- `build.py` folds the next 7 days of dated events into each Sacramento-area
+  town page alongside the weekly events. `assets/app.js` matches them by date
+  (`e.date`) while weekly events keep matching by day-of-week (`e.day`).
+- A daily cron runs the scraper, rebuilds, commits and pushes.
+
+If the scrape ever fails or the listing markup changes, the site falls back to
+the weekly events — it never invents storytimes to fill the gap. Do not add
+library storytimes to `data/events.json` as weekly recurrences.
 
 ## Editorial rule
 

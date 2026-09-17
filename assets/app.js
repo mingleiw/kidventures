@@ -169,14 +169,22 @@
   var DAYS  = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   var SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
+  // Local YYYY-MM-DD for matching dated events (refreshed daily by the
+  // scraper). Recurring events still match on day-of-week via e.day.
+  function ymd(d) {
+    return d.getFullYear() + '-' +
+      ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+  }
+
   var today = new Date(); today.setHours(0, 0, 0, 0);
   var week = [];
   for (var i = 0; i < 7; i++) {
     var d = new Date(today); d.setDate(today.getDate() + i); week.push(d);
   }
   function countFor(d) {
-    var n = 0;
-    for (var k = 0; k < EVENTS.length; k++) if (EVENTS[k].day === d.getDay()) n++;
+    var n = 0, y = ymd(d);
+    for (var k = 0; k < EVENTS.length; k++)
+      if (EVENTS[k].day === d.getDay() || EVENTS[k].date === y) n++;
     return n;
   }
 
@@ -224,7 +232,7 @@
     var d = week[picked];
     // An entry may have no time: the day and venue are confirmed but the hour
     // is not. Those sort last and say so rather than showing a made-up clock.
-    var list = EVENTS.filter(function (e) { return e.day === d.getDay(); })
+    var list = EVENTS.filter(function (e) { return e.day === d.getDay() || e.date === ymd(d); })
                      .sort(function (a, b) {
                        var ta = a.time || '99:99', tb = b.time || '99:99';
                        return ta < tb ? -1 : (ta > tb ? 1 : 0);
