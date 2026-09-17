@@ -230,19 +230,8 @@ def city_page(town, places, events, dated, base):
 
   <!-- ad slot: below the fold, above the answer -->
 
-  <section class="pick-section" id="today">
-    <div class="wrap">
-      <div class="section-head">
-        <h2 id="todayHead">Today, near %s</h2>
-        <p class="section-sub" id="todayWhy">Closest to you first.</p>
-      </div>
-      <div class="picks" id="picks"></div>
-      <p class="picks-note" id="picksNote"></p>
-    </div>
-  </section>
 ''' % (html.escape(name), len(listed), LIST_MILES,
-       'Weekly markets and events too.' if ev else '',
-       html.escape(name))
+       'Weekly markets and events too.' if ev else '')
 
     if ev:
         out += '''

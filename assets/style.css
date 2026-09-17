@@ -180,43 +180,6 @@ section[id] { scroll-margin-top: 78px; }
 .loc-clear:active { transform: translateY(1px); }
 .loc-hint { margin: 14px 0 0; font-size: 14px; color: var(--ink-2); }
 
-/* ---------- The answer ---------- */
-.pick-section { padding: 22px 0 8px; }
-.section-sub .wx { display: inline-block; vertical-align: -5px; margin-right: 8px; }
-
-.picks { display: flex; flex-direction: column; gap: 12px; }
-
-.pick {
-  display: block; padding: 18px 22px;
-  background: var(--chalk); border-radius: var(--r-md);
-  box-shadow: 0 2px 0 var(--line-2);
-  transition: transform .25s var(--bounce), box-shadow .25s var(--ease);
-}
-.pick:hover { transform: translateY(-2px); box-shadow: 0 4px 0 var(--line-2), 0 10px 22px rgba(35,49,61,.1); }
-.pick:active { transform: translateY(1px); box-shadow: 0 1px 0 var(--line-2); }
-
-.pick-line { display: flex; align-items: baseline; gap: 14px; width: 100%; }
-.pick-name { font-family: var(--display); font-size: 20px; font-weight: 700; }
-/* a dotted trail running to the distance */
-.pick-leader { flex: 1 1 auto; height: 0; border-bottom: 3px dotted currentColor; opacity: .3; transform: translateY(-6px); }
-.pick-dist { flex: none; font-size: 15.5px; font-weight: 800; }
-.pick-reason { display: block; margin-top: 5px; font-size: 14.5px; color: var(--ink-2); }
-
-/* the answer, stuck on like a sticker */
-.pick.is-top {
-  background: var(--sun); color: var(--ink);
-  padding: 32px 30px 30px; border-radius: var(--r-lg);
-  box-shadow: 0 4px 0 #D4881A, 0 16px 34px rgba(245,166,35,.28);
-  transform: rotate(-.5deg);
-}
-.pick.is-top:hover { transform: rotate(-.5deg) translateY(-3px); box-shadow: 0 6px 0 #D4881A, 0 20px 40px rgba(245,166,35,.34); }
-.pick.is-top:active { transform: rotate(-.5deg) translateY(1px); box-shadow: 0 2px 0 #D4881A; }
-.pick.is-top .pick-name { font-size: clamp(27px, 4vw, 40px); font-weight: 800; line-height: 1.08; }
-.pick.is-top .pick-dist { font-size: 20px; }
-.pick.is-top .pick-leader { opacity: .42; }
-.pick.is-top .pick-reason { margin-top: 10px; font-size: 16px; color: rgba(35,49,61,.72); font-weight: 600; }
-
-.picks-note { margin: 18px 0 0; font-size: 14px; color: var(--ink-2); }
 
 /* ---------- Section heads ---------- */
 .section-head { margin-bottom: 28px; }
@@ -402,6 +365,5 @@ section[id] { scroll-margin-top: 78px; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
   .hero-title .hl { opacity: 1 !important; transform: none !important; }
-  .pick.is-top { transform: none !important; }
   .brand-mark, .ico { transform: none !important; }
 }
