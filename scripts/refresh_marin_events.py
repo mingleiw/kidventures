@@ -145,6 +145,11 @@ def main():
             "blurb": first["blurb"], "n_occs": len(occs),
         })
 
+    existing = json.load(open(EVENTS_JSON))
+    managed = [e for e in existing if e.get("origin") == ORIGIN]
+    others = [e for e in existing if e.get("origin") != ORIGIN]
+    by_title = {norm_title(e["title"]): e for e in managed}
+
     # Dedupe: the calendar sometimes lists the same weekly event under two slugs
     # with conflicting schedules. Prefer the candidate matching the existing
     # entry (stability bias); otherwise the one with more occurrences.
@@ -171,11 +176,6 @@ def main():
     if not recurring:
         print("ERROR: scrape returned zero recurring events; keeping prior data", file=sys.stderr)
         return 1
-
-    existing = json.load(open(EVENTS_JSON))
-    managed = [e for e in existing if e.get("origin") == ORIGIN]
-    others = [e for e in existing if e.get("origin") != ORIGIN]
-    by_title = {norm_title(e["title"]): e for e in managed}
 
     fresh, added, dropped, updated = [], [], [], []
     seen = set()
