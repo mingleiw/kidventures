@@ -1,12 +1,15 @@
 #!/bin/bash
-# Daily refresh: re-scrape library storytimes, rebuild the site, push if changed.
+# Daily refresh: re-scrape library storytimes, refresh other recurring events,
+# rebuild the site, push if changed.
 # Run from cron. The push helper authenticates through the Secure Vault, so this
 # needs the VM's authd socket (present in the normal agent runtime).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-python3 scripts/refresh_storytimes.py
-python3 scripts/refresh_marin_storytimes.py
+python3 scripts/refresh_storytimes.py          # Sacramento-area library storytimes
+python3 scripts/refresh_marin_storytimes.py   # Mill Valley / Marin library storytimes
+python3 scripts/refresh_marin_events.py       # other recurring Marin events (Marin Mommies)
+python3 scripts/refresh_scm_events.py         # Sacramento Children's Museum weekly programs
 python3 build.py
 
 if [ -z "$(git status --porcelain)" ]; then
