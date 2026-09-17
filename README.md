@@ -121,7 +121,8 @@ Add to `data/events.json`. Events show on city pages whose region matches.
 ```jsonc
 {
   "day": 6,                     // 0=Sun … 6=Sat
-  "time": "08:00",              // 24h; used for sorting and display
+  "time": "08:00",              // OPTIONAL. 24h. Omit if the hour is genuinely
+                                // unknown — never guess it; see below
   "until": "12:00",             // optional
   "title": "Elk Grove Certified Farmers' Market",
   "venue": "Laguna Gateway Center", "city": "Elk Grove",
@@ -133,6 +134,12 @@ Add to `data/events.json`. Events show on city pages whose region matches.
 
 **`source` is not optional.** Every listing renders a "Where this came from"
 link, so a parent can verify it in one tap. No source, no listing.
+
+**`time` is optional, and that is deliberate.** A confirmed day at a confirmed
+venue is worth listing even when the hour isn't known; a guessed clock time is
+not, because a family drives to it. Omit `time` and the row renders "Time not
+confirmed", sorts after the timed events, and shows its source link so the hour
+can be checked. Do not fill it in with a plausible-looking value.
 
 ### What does not fit this model
 
@@ -197,7 +204,10 @@ traffic tracks whether these pages are worth indexing, and that is exactly what
 
 - [ ] More Peninsula and North Bay places — the thinnest regions
 - [ ] Places near Petaluma, Santa Rosa, Livermore and Gilroy so they qualify
-- [ ] Storytimes for the Elk Grove library once its new building opens; the old
-      branch stopped serving on 25 July 2026 and nothing is listed there yet
+- [ ] Storytimes for the Elk Grove library after its **10 October 2026** grand
+      opening at 9260 Elk Grove Blvd; nothing is listed there until a schedule
+      is published
+- [ ] The hour for the A Seat at the Table Books storytime, which is listed
+      without one
 - [ ] An age filter on the weekly events (`ages` is display-only today)
 - [ ] Per-city `<title>` tuning if search traffic ever becomes the goal
