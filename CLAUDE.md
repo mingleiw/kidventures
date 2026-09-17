@@ -44,7 +44,10 @@ only). Mill Valley Public Library storytimes live in
 JSON feed; stdlib only). One file per source, so a broken scraper can never
 wipe another source's data. Do not hand-add dated instances — the scrapers
 own those files. Do not encode library storytimes as weekly recurrences in
-`data/events.json` either: they are published per date. `build.py` folds the
+`data/events.json` either: they are published per date. Recurring
+(non-library) weekly events from the Marin Mommies calendar were imported
+once via `scripts/import_marin_mommies.py` (2026-09-16, 40 events); re-run
+manually when they go stale. `build.py` folds the
 next 7 days of dated events into the page JSON; `assets/app.js` matches them
 by `e.date`.
 
